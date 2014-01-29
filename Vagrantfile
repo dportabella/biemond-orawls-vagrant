@@ -13,7 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     admin.vm.hostname = "admin.example.com"
     admin.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=777","fmode=777"]
-    admin.vm.synced_folder "/Users/edwin/software", "/software"
+    admin.vm.synced_folder "~/software", "/software"
 
     #admin.vm.synced_folder ".", "/vagrant", type: "nfs"
     #admin.vm.synced_folder "/Users/edwin/software", "/software", type: "nfs"
@@ -22,7 +22,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
     admin.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--memory", "2048"]
-      vb.customize ["modifyvm", :id, "--name", "admin"]
+      #vb.customize ["modifyvm", :id, "--name", "admin"]
     end
   
     admin.vm.provision :shell, :inline => "ln -sf /vagrant/puppet/hiera.yaml /etc/puppet/hiera.yaml;mkdir -p /etc/facter;ln -sf /vagrant/facts /etc/facter/facts.d;rm -rf /etc/puppet/modules;ln -sf /vagrant/puppet/modules /etc/puppet/modules"
@@ -52,7 +52,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
     node1.vm.hostname = "node1.example.com"
     node1.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=777","fmode=777"]
-    node1.vm.synced_folder "/Users/edwin/software", "/software"
+    node1.vm.synced_folder "~/software", "/software"
     #node1.vm.synced_folder ".", "/vagrant", type: "nfs"
     #node1.vm.synced_folder "/Users/edwin/software", "/software", type: "nfs"
 
@@ -62,7 +62,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
     node1.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--memory", "1532"]
-      vb.customize ["modifyvm", :id, "--name", "node1"]
+      #vb.customize ["modifyvm", :id, "--name", "node1"]
     end
   
     node1.vm.provision :shell, :inline => "ln -sf /vagrant/puppet/hiera.yaml /etc/puppet/hiera.yaml;mkdir -p /etc/facter;ln -sf /vagrant/facts /etc/facter/facts.d;rm -rf /etc/puppet/modules;ln -sf /vagrant/puppet/modules /etc/puppet/modules"
@@ -92,7 +92,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     node2.vm.hostname = "node2.example.com"
     node2.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=777","fmode=777"]
-    node2.vm.synced_folder "/Users/edwin/software", "/software"
+    node2.vm.synced_folder "~/software", "/software"
 
     #node2.vm.synced_folder ".", "/vagrant", type: "nfs"
     #node2.vm.synced_folder "/Users/edwin/software", "/software", type: "nfs"
@@ -102,7 +102,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
     node2.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--memory", "1532"]
-      vb.customize ["modifyvm", :id, "--name", "node2"]
+      #vb.customize ["modifyvm", :id, "--name", "node2"]
     end
   
     node2.vm.provision :shell, :inline => "ln -sf /vagrant/puppet/hiera.yaml /etc/puppet/hiera.yaml;mkdir -p /etc/facter;ln -sf /vagrant/facts /etc/facter/facts.d;rm -rf /etc/puppet/modules;ln -sf /vagrant/puppet/modules /etc/puppet/modules"
