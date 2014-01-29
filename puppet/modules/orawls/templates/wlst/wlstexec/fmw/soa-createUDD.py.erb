@@ -115,7 +115,7 @@ try:
         options,remainder = getopt.getopt(sys.argv[1:],'', ['soacluster=', 'bamcluster=', 'domain_home=', 'create_jms=','extend='])
 except getopt.error, msg:
         printUsage()
-        sys.exit()
+        sys.exit(1)
 
 for opt, arg in options:
     if opt == '--soacluster':
@@ -131,16 +131,16 @@ for opt, arg in options:
 
 if domain_home.isspace():
    printUsage()
-   sys.exit()
+   sys.exit(1)
 
 if soacluster.isspace() and bamcluster.isspace():
    printUsage()
-   sys.exit()
+   sys.exit(1)
 
 if not extend.isspace():
    if not extend == 'true' and not extend == 'false':
         printUsage()
-        sys.exit()
+        sys.exit(1)
 
 
 if not soacluster.isspace() and not bamcluster.isspace():
