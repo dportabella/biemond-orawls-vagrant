@@ -7,7 +7,9 @@ portNumber = '<%= @adminserver_port %>'
 user_config = '<%= @userConfigFile %>'
 user_key    = '<%= @userKeyFile %>'
 
-# clusterName, clusterNodes
+migrationEnabled = false
+
+# clusterName, clusterNodes, migrationEnabled
 <% @params.each do |param| -%>   
 <%= param %>                    
 <% end -%>                      
@@ -31,7 +33,8 @@ try:
 
     cd('/Clusters/'+clusterName)
     cmo.setClusterMessagingMode('unicast')
-    cmo.setMigrationBasis('consensus')
+    if migrationEnabled:
+      cmo.setMigrationBasis('consensus')
 
     for node in clusterNodesTargets:
       print 'Attach server ' + node + ' to cluster'

@@ -13,3 +13,4 @@ clusters_instances:
          params:
             - "clusterName      = 'WebCluster'"
             - "clusterNodes     = 'wlsServer1,wlsServer2'"
+            - "migrationEnabled = false
