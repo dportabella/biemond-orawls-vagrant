@@ -328,6 +328,12 @@ define orawls::domain (
       }
     }
 
+    file_line {'CustomDomainEnv ${domain_name} ${title}':
+      path  => "${domain_dir}/${domain_name}/bin/setDomainEnv.sh",
+      line  => 'if [ -f $DOMAIN_HOME/bin/setCustomDomainEnv.sh ]; then source $DOMAIN_HOME/bin/setCustomDomainEnv.sh; fi',
+      require => Exec["execwlst ${domain_name} ${title}"],
+    }
+
     exec { "domain.py ${domain_name} ${title}":
       command => "rm ${download_dir}/domain_${domain_name}.py",
       require => Exec["execwlst ${domain_name} ${title}"],
