@@ -1,6 +1,6 @@
 require 'easy_type'
 require 'utils/wls_access'
-require 'utils/erb_reader'
+require 'utils/settings'
 require 'facter'
 
 module Puppet
@@ -8,8 +8,6 @@ module Puppet
   newtype(:wls_machine) do
     include EasyType
     include Utils::WlsAccess
-    extend Utils::ERBReader
-
 
     desc "This resource allows you to manage machine in an WebLogic domain."
 
@@ -18,25 +16,22 @@ module Puppet
     set_command(:wlst)
   
     to_get_raw_resources do
-      wlst erb_template('providers/wls_machine/index.py', binding)
+      wlst template('providers/wls_machine/index.py', binding)
     end
 
     on_create do
-      extend Utils::ERBReader
       Puppet.info "create #{name} "
-      erb_template('providers/wls_machine/create.py', binding)
+      template('providers/wls_machine/create.py', binding)
     end
 
     on_modify do
-      extend Utils::ERBReader
       Puppet.info "modify #{name} "
-      erb_template('providers/wls_machine/modify.py', binding)
+      template('providers/wls_machine/modify.py', binding)
     end
 
     on_destroy do
-      extend Utils::ERBReader
       Puppet.info "destroy #{name} "
-      erb_template('providers/wls_machine/destroy.py', binding)
+      template('providers/wls_machine/destroy.py', binding)
     end
 
     parameter :name
@@ -44,7 +39,6 @@ module Puppet
     property  :nmtype
     property  :listenaddress
     property  :listenport
-#    property  :servers
 
   private 
 

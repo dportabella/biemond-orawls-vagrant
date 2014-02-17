@@ -25,6 +25,7 @@ node 'admin.example.com' {
   include jms_module_foreign_server_objects,jms_module_foreign_server_entries_objects
   include pack_domain
 
+
   Class[java] -> Class[orawls::weblogic]
 }  
 
@@ -200,6 +201,16 @@ class domains{
   $default_params = {}
   $domain_instances = hiera('domain_instances', [])
   create_resources('orawls::domain',$domain_instances, $default_params)
+
+  wls_setting { 'default':
+    admin_server => 'AdminServer',
+    connect_url  => 't3://10.10.10.10:7001',
+    domain       => 'Wls1036',
+    domains_path => '/opt/oracle/wlsdomains/domains',
+    user         => 'wls',
+  }
+
+
 }
 
 class nodemanager {
@@ -236,17 +247,25 @@ class machines{
   notify { 'class machines':} 
   $default_params = {}
   $machines_instances = hiera('machines_instances', [])
-  create_resources('orawls::wlstexec',$machines_instances, $default_params)
+  create_resources('wls_machine',$machines_instances, $default_params)
 
-  wls_machine { 'test2':
-    ensure        => 'present',
-    listenaddress => '10.10.10.10',
-    listenport    => '5556',
-    machinetype   => 'UnixMachine',
-    nmtype        => 'SSL',
-  }
 }
 
+define wlst_yaml_provider()
+{
+  $type            = $title
+  $apps            = hiera('weblogic_apps')
+  $apps_config_dir = hiera('apps_config_dir')
+
+  $apps.each |$app| { 
+    $allHieraEntriesYaml = loadyaml("${apps_config_dir}/${app}/${type}/${app}_${type}.yaml")
+    if $allHieraEntriesYaml != undef {
+      if $allHieraEntriesYaml["${type}_instances"] != undef {
+          create_resources("wls_${type}",$allHieraEntriesYaml["${type}_instances"])
+      }  
+    }
+  }  
+}
 
 define wlst_yaml()
 {
@@ -269,7 +288,7 @@ define wlst_yaml()
 class managed_servers{
   require machines
   notify { 'class managed_servers':} 
-  wlst_yaml{'servers':} 
+  wlst_yaml_provider{'server':} 
 }
 
 class clusters{
@@ -371,4 +390,5 @@ class pack_domain{
   $pack_domain_instances = hiera('pack_domain_instances', $default_params)
   create_resources('orawls::packdomain',$pack_domain_instances, $default_params)
 }
+
 
